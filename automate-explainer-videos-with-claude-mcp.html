@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Automating Narrated Explainer Videos From Claude Code and Codex With MCP</title>
+<meta name="description" content="Connect the remote SpeedPainter MCP server and open-source agent skill to turn local documents, URLs and notes into narrated whiteboard MP4s from chat.">
+<link rel="canonical" href="https://arkyu2077.github.io/whiteboard-video-guide/automate-explainer-videos-with-claude-mcp.html">
+<meta property="og:title" content="Automating Narrated Explainer Videos From Claude Code and Codex With MCP">
+<meta property="og:description" content="Connect the remote SpeedPainter MCP server and open-source agent skill to turn local documents, URLs and notes into narrated whiteboard MP4s from chat.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://arkyu2077.github.io/whiteboard-video-guide/automate-explainer-videos-with-claude-mcp.html">
+<meta property="og:image" content="https://arkyu2077.github.io/whiteboard-video-guide/img/claude-mcp-explainer.webp">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="index.html">Whiteboard & Speedpaint Video Handbook</a><nav><a href="index.html">All guides</a></nav></div></header>
+<main><div class="wrap">
+<article>
+<h1>Automating Narrated Explainer Videos From Claude Code and Codex With MCP</h1>
+<p class="meta">Published 2026-11-03 · 612 words</p>
+<figure><img src="img/claude-mcp-explainer.webp" alt="Whiteboard explainer scene created through an AI agent workflow using the SpeedPainter MCP server"><figcaption>Whiteboard explainer scene created through an AI agent workflow using the SpeedPainter MCP server</figcaption></figure>
+<p>Most AI video workflows still force you to copy text out of your editor, paste it into a browser tab, babysit a progress bar, and download the file back to your project folder. If you already write documentation, lesson plans or release notes inside an AI coding assistant such as Claude Code, OpenAI Codex or Cursor, the Model Context Protocol (MCP) removes that context switch. Your agent reads the local file, calls the remote video tools over HTTPS, polls until the render finishes, and hands you the published MP4 URL right in the terminal or chat.</p>
+
+<h2>How the remote MCP server and skill fit together</h2>
+<p>SpeedPainter exposes Explainer Video through two complementary pieces that work together without requiring you to manage third-party image, voice or rendering API keys:</p>
+<ul>
+<li><strong>The remote MCP server (<code>https://api.speedpainter.org/mcp</code>).</strong> Hosted over Streamable HTTP and secured with Google OAuth sign-in, it exposes the server-side tools that check your credit balance, start a render, inspect task progress and cancel jobs.</li>
+<li><strong>The open-source Agent Skill (<code>SpeedPainterOrg/explainer-video</code>).</strong> Installed with a single <code>npx --yes github:SpeedPainterOrg/explainer-video</code> command, the installer automatically detects Claude Code and Codex and teaches the agent the default creative framing, duration limits (5 to 300 seconds) and polling sequence.</li>
+</ul>
+<p>You can walk through the full setup on the <a href="https://www.speedpainter.org/en/skills/explainer-video">SpeedPainter MCP skill</a> guide. Because authentication happens through browser OAuth when the MCP connection initializes, you never paste a secret key into a repository or environment file, and your local source document is read by the agent on your machine rather than uploaded as a raw file.</p>
+
+<h2>The three-step tool lifecycle</h2>
+<p>In its default server-generated mode, the agent follows a deterministic asynchronous loop:</p>
+<ol>
+<li><strong>Check balance (<code>get_explainer_credits</code>).</strong> Verify that the connected account has enough credits for the requested duration before submitting a job.</li>
+<li><strong>Submit the task (<code>create_explainer_video</code>).</strong> The agent extracts the key text (up to 20,000 characters) from your local Markdown doc, PDF, notes or URL and sends it along with target duration (default 60 s), aspect ratio (16:9, 9:16, 1:1 or 4:5), source or requested language, and burned subtitle preferences.</li>
+<li><strong>Poll to completion (<code>get_explainer_task</code>).</strong> Because storyboard planning, hand-drawn scene generation, voice narration and subtitle burning take real rendering time, the agent polls the task ID until the status completes and returns the playable MP4 link and SRT caption file (or calls <code>cancel_explainer_task</code> to abort and automatically refund reserved credits).</li>
+</ol>
+<p>When a project needs strict visual sign-off before final assembly, the skill also supports an advanced review mode where the agent generates and lets you inspect scene illustrations before the final render pass.</p>
+
+<h2>Budgeting credits across automated runs</h2>
+<p>Both Explainer Video and the image-to-video Speedpaint generator draw from one shared balance. Checking <a href="https://www.speedpainter.org/en/pricing">SpeedPainter pricing and credits</a> before wiring an agent into a documentation or release pipeline helps you pick the right tier for your volume:</p>
+<table>
+<tr><th>Plan or Pack</th><th>Price (USD)</th><th>Included Credits</th><th>Notes</th></tr>
+<tr><td>Free sign-up</td><td>$0</td><td>60 one-time credits</td><td>Watermarked preview exports; great for first MCP test</td></tr>
+<tr><td>Starter</td><td>$19.90/mo ($199/yr)</td><td>700/mo (8,400/yr)</td><td>Clean exports, shared across MCP and web</td></tr>
+<tr><td>Plus</td><td>$39.90/mo ($399/yr)</td><td>2,000/mo (24,000/yr)</td><td>Fits weekly course or product release pipelines</td></tr>
+<tr><td>Ultra</td><td>$59.90/mo ($599/yr)</td><td>4,000/mo (48,000/yr)</td><td>High-volume multi-language explainers</td></tr>
+<tr><td>One-time credit packs</td><td>$29.90 / $49.90 / $99.90</td><td>1,000 / 3,000 / 8,000</td><td>Pay-as-you-go top-ups without a recurring commitment</td></tr>
+</table>
+<p>Because failed or cancelled tasks return their reserved credits automatically, calling <code>cancel_explainer_task</code> whenever you spot a typo in your prompt keeps your automated runs mistake-proof. Teams that publish weekly release notes or bilingual documentation often keep a short prompt template in their repository so any contributor can ask Claude Code or Codex for a 60-second 16:9 overview and get back a consistent whiteboard explainer in minutes.</p>
+</article>
+</div></main>
+<footer><div class="wrap">Whiteboard & Speedpaint Video Handbook · independent notes on AI whiteboard and drawing videos · <a href="sitemap.xml">Sitemap</a></div></footer>
+</body>
+</html>

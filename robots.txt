@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://arkyu2077.github.io/whiteboard-video-guide/sitemap.xml

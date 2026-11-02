@@ -1,0 +1,30 @@
+:root{--bg:#fbfbf9;--fg:#1d1d1b;--muted:#5f5f58;--accent:#0b6e7a;--line:#e3e2dc;--card:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#141413;--fg:#ecebe6;--muted:#a7a69e;--accent:#5cc3cf;--line:#2c2c2a;--card:#1c1c1b}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+header{border-bottom:1px solid var(--line)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;color:var(--fg);letter-spacing:.01em}
+nav a{color:var(--muted);text-decoration:none;margin-left:14px;font-size:15px}
+nav a:hover{color:var(--accent)}
+main{padding:32px 0 56px}
+h1{font-size:2rem;line-height:1.2;margin:.2em 0 .4em;letter-spacing:-.01em}
+h2{font-size:1.35rem;margin:1.6em 0 .5em}
+.meta{color:var(--muted);font-size:.9rem;margin-bottom:1.4em}
+.lead{font-size:1.1rem;color:var(--muted)}
+figure{margin:1.6em 0}figure img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
+figcaption{color:var(--muted);font-size:.85rem;margin-top:.5em}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--card)}
+code{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.9em}
+ul,ol{padding-left:1.3em}li{margin:.35em 0}
+.cards{list-style:none;padding:0;margin:1.5em 0;display:grid;gap:14px}
+.cards li{border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:var(--card);margin:0}
+.cards a{font-weight:600;text-decoration:none;font-size:1.08rem}
+.cards p{margin:.4em 0 0;color:var(--muted);font-size:.95rem}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+footer .wrap{padding:18px 16px}
+@media (max-width:480px){h1{font-size:1.55rem}body{font-size:16px}}
