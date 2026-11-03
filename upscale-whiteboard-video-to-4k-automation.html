@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Upscale AI Whiteboard Animations to Crisp 4K 60fps with n8n &amp; VideoUpscaler API</title>
+<meta name="description" content="Fix soft line art, H.264 ringing around ink strokes, and 24fps draw stutter in exported whiteboard explainers using n8n-nodes-videoupscaler and the VideoUpscaler REST API.">
+<link rel="canonical" href="https://arkyu2077.github.io/whiteboard-video-guide/upscale-whiteboard-video-to-4k-automation.html">
+<meta property="og:title" content="How to Upscale AI Whiteboard Animations to Crisp 4K 60fps with n8n &amp; VideoUpscaler API">
+<meta property="og:description" content="Fix soft line art, H.264 ringing around ink strokes, and 24fps draw stutter in exported whiteboard explainers using n8n-nodes-videoupscaler and the VideoUpscaler REST API.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://arkyu2077.github.io/whiteboard-video-guide/upscale-whiteboard-video-to-4k-automation.html">
+<meta property="og:image" content="https://arkyu2077.github.io/whiteboard-video-guide/img/whiteboard-maker.webp">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="index.html">Whiteboard &amp; Speedpaint Video Handbook</a><nav><a href="index.html">All guides</a></nav></div></header>
+<main><div class="wrap">
+<article>
+<h1>How to Upscale AI Whiteboard Animations to Crisp 4K 60fps with n8n &amp; VideoUpscaler API</h1>
+<p class="meta">Published 2026-11-03 · 960 words</p>
+<figure><img src="img/whiteboard-maker.webp" alt="High-contrast hand-drawn whiteboard explainer animation upscaled to razor-sharp 4K 60fps"><figcaption>High-contrast hand-drawn whiteboard explainer animation upscaled to razor-sharp 4K 60fps</figcaption></figure>
+<p>Hand-drawn whiteboard explainers and speedpaint reveal videos live or die by edge clarity. Because a whiteboard canvas consists of dark marker strokes, fine cross-hatching, and small caption text against a bright paper background, standard 720p or 1080p web exports expose every compression flaw when played full-screen on a 4K monitor or conference room display. By chaining your whiteboard generator—whether rendered interactively or via <a href="automate-explainer-videos-with-claude-mcp.html">Claude Code and MCP automation</a>—into a post-export super-resolution pipeline on <a href="https://videoupscaler.co">VideoUpscaler</a>, you can automatically deliver razor-sharp 4K 60fps training and product explainers.</p>
+
+<h2>Why exported whiteboard explainers suffer from soft strokes, ringing, and jerky motion</h2>
+<p>Most cloud whiteboard and speedpaint engines render at 720p or 1080p and 24 to 30 frames per second to keep turnaround times fast. While that works for mobile previews, three visual artifacts appear as soon as the video is scaled up on desktop LMS platforms, YouTube 4K, or trade-show displays:</p>
+<ul>
+<li><strong>Soft line art and staircase aliasing:</strong> Diagonal pen strokes, diagram arrows, and burned-in subtitle glyphs look fuzzy or jagged when a 1080p video is stretched 2× by the browser's bilinear scaler instead of reconstructed with a <a href="https://videoupscaler.co/4k-video-upscaler">4K AI video upscaler</a>.</li>
+<li><strong>Compression ringing ("mosquito noise") around ink edges:</strong> Standard H.264/AVC encoding struggles with sharp black-on-white transitions, leaving faint gray halos and block chatter around marker lines and callout boxes. Running an edge-preserving <a href="https://videoupscaler.co/denoise-video">AI video denoiser</a> before or during upscaling strips out macroblock ringing while keeping the paper background pure white.</li>
+<li><strong>Jerky hand-draw and camera-pan motion:</strong> Fast speedpaint hand sweeps and canvas zoom transitions at 24fps or 30fps exhibit noticeable strobe stepping. Applying optical-flow <a href="https://videoupscaler.co/frame-interpolation">60fps frame interpolation</a> doubles the temporal cadence so pen strokes glide smoothly across the board.</li>
+</ul>
+
+<h2>Post-export enhancement workflow: SpeedPainter → VideoUpscaler 4K 60fps</h2>
+<p>Rather than slowing down your initial storyboard and voiceover iterations, keep your creative drafting fast and attach an automated finishing stage once a video is approved:</p>
+<ol>
+<li><strong>Generate the narrated explainer or speedpaint MP4:</strong> Export your 16:9 or 9:16 explainer from SpeedPainter (web studio or MCP server).</li>
+<li><strong>Clean compression artifacts &amp; upscale to 4K:</strong> Submit the exported MP4 URL to <a href="https://videoupscaler.co">VideoUpscaler</a> with 4K UHD target resolution and artifact cleanup via the <a href="https://videoupscaler.co/denoise-video">denoise video</a> pipeline.</li>
+<li><strong>Interpolate motion to 60fps:</strong> Enable <a href="https://videoupscaler.co/frame-interpolation">frame interpolation</a> so rapid sketch reveals and whiteboard camera pans render at silky 60fps.</li>
+<li><strong>Process entire course modules in parallel:</strong> When updating an entire onboarding curriculum or multi-language playlist, feed all lesson MP4s through the <a href="https://videoupscaler.co/batch-video-upscaler">batch video upscaler</a> simultaneously.</li>
+</ol>
+
+<h2>Automating 4K 60fps whiteboard delivery with <code>n8n-nodes-videoupscaler</code></h2>
+<p>Teams publishing weekly <a href="product-demo-and-training-whiteboard-videos.html">product demo and internal training whiteboard videos</a> can eliminate manual file shuffling by wiring n8n between their whiteboard renderer and their LMS or video host. The official community package <a href="https://www.npmjs.com/package/n8n-nodes-videoupscaler"><code>n8n-nodes-videoupscaler</code> on npm</a> (open-source repository at <a href="https://github.com/arkyu2077/n8n-nodes-videoupscaler"><code>arkyu2077/n8n-nodes-videoupscaler</code></a>) provides a drop-in n8n node for the entire submit-poll-download lifecycle. Full connector documentation and prebuilt templates are available on the <a href="https://videoupscaler.co/integrations">VideoUpscaler integrations page</a>.</p>
+
+<h3>Step 1: Install <code>n8n-nodes-videoupscaler</code></h3>
+<p>In n8n, navigate to <strong>Settings → Community Nodes → Install</strong> and enter <code>n8n-nodes-videoupscaler</code>, or install via CLI in your self-hosted container:</p>
+<pre><code>npm install n8n-nodes-videoupscaler</code></pre>
+<p>Add your <strong>VideoUpscaler API</strong> bearer token in n8n Credentials.</p>
+
+<h3>Step 2: Configure the n8n workflow nodes</h3>
+<p>A typical unattended curriculum pipeline chains four nodes:</p>
+<ol>
+<li><strong>Webhook / Trigger Node:</strong> Fires whenever a new explainer MP4 finishes rendering or lands in an S3/Google Drive staging folder.</li>
+<li><strong>VideoUpscaler Node (<code>n8n-nodes-videoupscaler</code>):</strong>
+  <ul>
+    <li><strong>Resource / Operation:</strong> <code>Task → Create &amp; Wait</code></li>
+    <li><strong>Input Video URL:</strong> <code>{{$json.mp4_url}}</code></li>
+    <li><strong>Resolution:</strong> <code>4k</code> (3840 × 2160)</li>
+    <li><strong>Denoise / Deblock:</strong> Enabled to erase H.264 mosquito noise around black marker strokes</li>
+    <li><strong>Frame Interpolation:</strong> <code>60fps</code> for fluid speedpaint hand movement</li>
+    <li><strong>Idempotency Key:</strong> <code>whiteboard-{{$json.lesson_id}}</code> to guarantee zero duplicate credit charges on webhook retries</li>
+  </ul>
+</li>
+<li><strong>HTTP Request / Storage Node:</strong> Downloads the finished 4K 60fps MP4 URL returned by the node and uploads it to Vimeo, Wistia, YouTube, or your company LMS.</li>
+<li><strong>Slack / Notion Notification Node:</strong> Posts the 4K master link and SRT subtitle file to your documentation channel.</li>
+</ol>
+
+<h2>Direct REST API blueprint for custom LMS &amp; CI/CD pipelines</h2>
+<p>If you trigger video builds from GitHub Actions, Python scripts, or Make.com, you can call the REST endpoints detailed in the <a href="https://videoupscaler.co/docs/workflows">VideoUpscaler workflow automation guide</a> directly:</p>
+<pre><code>curl -X POST https://videoupscaler.co/api/v1/upscale \
+  -H "Authorization: Bearer $VIDEOUPSCALER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: explainer-lesson-04-4k" \
+  -d '{
+    "video_url": "https://cdn.example.com/explainer-lesson-04-1080p.mp4",
+    "resolution": "4k",
+    "fps": 60,
+    "denoise": "high"
+  }'</code></pre>
+<p>Poll <code>GET https://videoupscaler.co/api/v1/tasks/{id}</code> every 5 to 10 seconds until <code>status</code> equals <code>completed</code>, then fetch the 4K MP4 from <code>output_url</code>.</p>
+
+<h2>Recommended settings by whiteboard video type</h2>
+<table>
+<tr><th>Whiteboard Format</th><th>Primary Artifact in Raw Export</th><th>Recommended VideoUpscaler Pipeline</th></tr>
+<tr><td>Speedpaint drawing timelapse</td><td>24fps hand-draw stutter &amp; fine sketch aliasing</td><td><a href="https://videoupscaler.co/4k-video-upscaler">4K Video Upscaler</a> + <a href="https://videoupscaler.co/frame-interpolation">60fps Frame Interpolation</a></td></tr>
+<tr><td>Narrated text explainer with burned captions</td><td>H.264 ringing around small subtitle text &amp; ink lines</td><td><a href="https://videoupscaler.co/denoise-video">Denoise Video</a> + 4K edge reconstruction</td></tr>
+<tr><td>Multi-lesson training &amp; onboarding course</td><td>Inconsistent resolution across 10–50 lesson clips</td><td>Automated queue via <a href="https://videoupscaler.co/batch-video-upscaler">Batch Video Upscaler</a> or <a href="https://www.npmjs.com/package/n8n-nodes-videoupscaler"><code>n8n-nodes-videoupscaler</code></a></td></tr>
+</table>
+<p>Combining automated whiteboard generation with the <a href="https://videoupscaler.co/integrations">VideoUpscaler integrations ecosystem</a> and <a href="https://videoupscaler.co/docs/workflows">REST workflow recipes</a> ensures every diagram, hand-drawn icon, and subtitle stays pin-sharp on 4K displays without adding manual editing steps to your publishing schedule.</p>
+</article>
+</div></main>
+<footer><div class="wrap">Whiteboard &amp; Speedpaint Video Handbook · <a href="https://arkyu2077.github.io/video-upscaling-guide/">Video Upscaling Handbook</a> · <a href="https://arkyu2077.github.io/image-upscaling-guide/">Image Upscaling Handbook</a> · <a href="sitemap.xml">Sitemap</a></div></footer>
+</body>
+</html>
